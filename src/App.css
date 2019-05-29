@@ -1,0 +1,26 @@
+body{
+  background-color: ivory;
+}
+
+.clicked{
+  background-color: palegoldenrod !important;
+  transition-property: background-color;
+  
+}
+.lastClicked{
+  background-color: orange !important;
+}
+.column{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+h1{
+  font-family: 'Sniglet', cursive;
+  color: darkslategrey;
+  font-size: 50px;
+  padding: 0;
+  margin: 0;
+  align-self: left;
+  margin-top: 20px;
+}
