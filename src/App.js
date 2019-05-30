@@ -24,6 +24,25 @@ class App extends Component {
       })
     })
   }
+  componentDidUpdate = () => {
+    if(!this.state.timerIsRunning){
+      const options = {
+        mode: 'no-cors',
+        method: 'GET'
+      };
+
+      const queryString = "https://cors-anywhere.herokuapp.com/https://en.wiktionary.org/w/api.php?action=query&format=json&titles=" + this.state.wordList.join("|")
+      console.log(queryString)
+      fetch(queryString)
+        .then(data=>data.json())
+        .then(data=>console.log(data))
+      //   .then(data=>{
+      //   this.setState({
+      //     wiki: data,
+      //   })
+      // })
+  }
+}
 
   timerIsDone = () => {
     this.setState({
