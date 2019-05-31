@@ -20,6 +20,10 @@ class Board extends Component {
 
     //move this back to Die.js, change to 'adjacent', use ...syntax instead of push
     clickIsAcceptable = (index) => {
+        if(!this.props.timerIsRunning){
+            return false
+        }
+
         if (!this.props.lastClick && this.props.lastClick != 0){
             console.log('first if, lastClick', this.props.lastClick)
             return true

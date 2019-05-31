@@ -21,7 +21,7 @@ const nameStyle = {
 
 class Timer extends Component{
     state = {
-        time: 20
+        time: 10
     }
     componentDidMount = () => {
         setTimeout(()=>{
@@ -42,7 +42,7 @@ class Timer extends Component{
     render(){
     return(
         <div style={titleStyle}>
-            <h1 style={nameStyle}>Bagel</h1>
+            <h1 style={nameStyle}>Polyglot</h1>
             <h1 style={timerStyle}>{this.state.time}</h1>
         </div>
     )

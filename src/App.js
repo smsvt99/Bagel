@@ -32,17 +32,37 @@ class App extends Component {
       };
 
       const queryString = "https://cors-anywhere.herokuapp.com/https://en.wiktionary.org/w/api.php?action=query&format=json&titles=" + this.state.wordList.join("|")
-      console.log(queryString)
       fetch(queryString)
         .then(data=>data.json())
-        .then(data=>console.log(data))
+        .then(data=> {
+          console.log(data)
+          let results = [];
+          Object.values(data.query.pages).forEach(value => {
+            let result = {};
+              result.lemma = value.title
+            if(value.missing === "" || value.title.length < 3 ){
+              result.score = 0
+            } else {
+              switch(value.title.length){
+                case 3: result.score = 1; break;
+                case 4: result.score = 1; break;
+                case 5: result.score = 2; break;
+                case 6: result.score = 3; break;
+                case 7: result.score = 5; break;
+                default: result.score = 11; break;
+              }
+            }
+            results.push(result)
+          })
+          console.log(results)
       //   .then(data=>{
       //   this.setState({
       //     wiki: data,
       //   })
       // })
-  }
+  })
 }
+  }
 
   timerIsDone = () => {
     this.setState({
@@ -52,7 +72,7 @@ class App extends Component {
 
   getLetterFromClick = (letter) => {
     this.setState({
-        currentWord : this.state.currentWord + letter
+        currentWord : this.state.currentWord + letter.toLowerCase()
     })
 }
 setLastClick = (index) => {
@@ -86,6 +106,7 @@ setLastClick = (index) => {
       getLetterFromClick = {this.getLetterFromClick}
       setLastClick = {this.setLastClick}
       lastClick = {this.state.lastClick}
+      timerIsRunning = {this.state.timerIsRunning}
       //die is a child
     />
     <Submit
