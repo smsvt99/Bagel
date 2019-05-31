@@ -21,7 +21,7 @@ const nameStyle = {
 
 class Timer extends Component{
     state = {
-        time: 10
+        time: 1000
     }
     componentDidMount = () => {
         setTimeout(()=>{

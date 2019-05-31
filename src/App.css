@@ -1,14 +1,16 @@
 body{
   background-color: ivory;
+  user-select: none;
 }
 
 .clicked{
   background-color: palegoldenrod !important;
-  transition-property: background-color;
-  
+  /* transition: background-color .2s; */
+
 }
 .lastClicked{
   background-color: orange !important;
+  /* transition: background-color .2s; */
 }
 .column{
   display: flex;
@@ -23,4 +25,7 @@ h1{
   margin: 0;
   align-self: left;
   margin-top: 20px;
+}
+.option:hover{
+  background-color: palegoldenrod !important;
 }

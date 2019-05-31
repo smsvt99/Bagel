@@ -25,7 +25,7 @@ class Board extends Component {
         }
 
         if (!this.props.lastClick && this.props.lastClick != 0){
-            console.log('first if, lastClick', this.props.lastClick)
+            // console.log('first if, lastClick', this.props.lastClick)
             return true
         }
 
@@ -68,8 +68,9 @@ class Board extends Component {
         if (this.props.diceArray != null) {
             this.props.diceArray.forEach(innerArray => {
                 let row = [];
-                innerArray.forEach(letter => {
+                innerArray.forEach((letter, index) => {
                     row.push(<Die
+                        key={index}
                         setLastClick={this.props.setLastClick} 
                         symbol={letter}
                         clickIsAcceptable={this.clickIsAcceptable}
