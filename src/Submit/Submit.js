@@ -10,7 +10,7 @@ const submitStyle = {
     lineHeight: "80px",
     textAlign: "center",
     color: "darkslategrey",
-    fontFamily: "'Sniglet', cursive",
+    // fontFamily: "'Sniglet', cursive",
     cursor: "pointer"
 }
 

@@ -29,40 +29,46 @@ class Die extends Component {
     }
 
 hasNotAlreadyBeenClicked = (target) => {
-    if(!target.classList.contains('clicked')){
-        return true
-    } else {
-        return false
-    }
+    return !target.classList.contains('clicked')
+    // if(!target.classList.contains('clicked')){
+    //     return true
+    // } else {
+    //     return false
+    // }
 }
     
 handleClick = (event) => {
     let index = Array.from(document.getElementsByClassName("die")).indexOf(event.target)
     if (this.props.clickIsAcceptable(index) && this.hasNotAlreadyBeenClicked(event.target)){
-        Array.from(document.getElementsByClassName("die")).forEach( letter => {
-            if (letter.classList.contains('lastClicked')){
-                letter.classList.remove('lastClicked');
-                letter.classList.add('clicked')
-            }
-        })
-        event.target.classList.add('lastClicked')
+        this.colorClicks(event.target)
         this.props.setLastClick(index)
         this.props.getLetterFromClick(event.target.textContent);
     }
 }
-handleDown = (event) => {
-    let options = event.target.nextSibling;
-    this.setState({showOptions:true})
-    setTimeout(()=>{
-        if(this.state.showOptions){
-            options.style.visibility = "initial";
-            options.style.top = "0px";
-            options.style.opacity = '1';
+colorClicks = (target) => {
+    Array.from(document.getElementsByClassName("die")).forEach( letter => {
+        if (letter.classList.contains('lastClicked')){
+            letter.classList.remove('lastClicked');
+            letter.classList.add('clicked')
         }
-    },200);
-    
-    document.getElementsByTagName('body')[0].addEventListener('mouseup', ()=>this.clear(options));
-
+    })
+    target.classList.add('lastClicked')
+}
+handleDown = (event) => {
+    let index = Array.from(document.getElementsByClassName("die")).indexOf(event.target)
+    if (this.props.clickIsAcceptable(index) && this.hasNotAlreadyBeenClicked(event.target)){
+        let options = event.target.nextSibling;
+        this.setState({showOptions:true})
+        setTimeout(()=>{
+            if(this.state.showOptions){
+                options.style.visibility = "initial";
+                options.style.top = "0px";
+                options.style.opacity = '1';
+            }
+        },200);
+        
+        document.getElementsByTagName('body')[0].addEventListener('mouseup', ()=>this.clear(options));
+    }
 }
 
 clear = (element) => {
@@ -84,7 +90,9 @@ render = () => {
                 {this.props.symbol.toUpperCase()}
             </div>
             <Diacritics
-                // parent={this.props.key}
+                colorClicks={this.colorClicks}
+                setLastClick = {this.props.setLastClick}
+                getLetterFromClick = {this.props.getLetterFromClick}
                 symbol={this.props.symbol}
             />
         </div>

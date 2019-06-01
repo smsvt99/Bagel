@@ -27,5 +27,6 @@ h1{
   margin-top: 20px;
 }
 .option:hover{
-  background-color: palegoldenrod !important;
+  background-color: palegreen !important;
+  color: black !important;
 }

@@ -97,7 +97,7 @@ setLastClick = (index) => {
 
   render(){
   return(
-  <div class="column">
+  <div className="column">
     <Timer
       timerIsDone={this.timerIsDone}
     />
