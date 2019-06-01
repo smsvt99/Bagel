@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Die from '../Die/Die.js';
+import Score from '../Score/Score.js';
+
 
 const rowStyle = {
     display: "flex",
@@ -8,7 +10,7 @@ const rowStyle = {
 
 const boardStyle = {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column', 
     backgroundColor: "lightblue",
     padding: "4px",
     borderRadius: "18px",
@@ -80,7 +82,13 @@ class Board extends Component {
                 board.push(<div style={rowStyle}>{row}</div>)
             })
         }
-        return <div style={boardStyle}>{board}</div>
+        return (<div>
+            <Score
+                scoreInfo={this.props.scoreInfo}
+            />
+            <div style={boardStyle}>{board}</div>
+            </div>
+            )
     }
 
 }

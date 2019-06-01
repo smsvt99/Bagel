@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Board from './Board/Board.js';
-import Timer from './Timer/Timer.js'
-import Submit from "./Submit/Submit.js"
+import Timer from './Timer/Timer.js';
+import Submit from "./Submit/Submit.js";
 
 import './App.css';
 
@@ -24,25 +24,25 @@ class App extends Component {
       })
     })
   }
-  componentDidUpdate = () => {
-    if(!this.state.timerIsRunning){
-      const options = {
-        mode: 'no-cors',
-        method: 'GET'
-      };
 
+  componentWillUpdate = (nextProps, nextState) => {
+    //only run this code when timerIsRunning changes from True to False
+    if(nextState.timerIsRunning !== this.state.timerIsRunning && !nextState.timerIsRunning){
       const queryString = "https://cors-anywhere.herokuapp.com/https://en.wiktionary.org/w/api.php?action=query&format=json&titles=" + this.state.wordList.join("|")
       fetch(queryString)
         .then(data=>data.json())
         .then(data=> {
-          console.log(data)
+          // console.log(data)
           let results = [];
           Object.values(data.query.pages).forEach(value => {
             let result = {};
               result.lemma = value.title
-            if(value.missing === "" || value.title.length < 3 ){
+              if(value.missing === ""){
+                result.score = -1
+              } else if(value.title.length < 3 ){
               result.score = 0
-            } else {
+            }
+             else {
               switch(value.title.length){
                 case 3: result.score = 1; break;
                 case 4: result.score = 1; break;
@@ -54,7 +54,9 @@ class App extends Component {
             }
             results.push(result)
           })
-          console.log(results)
+          this.setState({
+            scoreInfo: results
+          })
       //   .then(data=>{
       //   this.setState({
       //     wiki: data,
@@ -107,7 +109,7 @@ setLastClick = (index) => {
       setLastClick = {this.setLastClick}
       lastClick = {this.state.lastClick}
       timerIsRunning = {this.state.timerIsRunning}
-      //die is a child
+      scoreInfo = {this.state.scoreInfo}
     />
     <Submit
       currentWord = {this.state.currentWord}
