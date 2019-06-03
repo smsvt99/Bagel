@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { isAbsolute } from 'path';
 
 class Score extends Component{
     scoreStyle = {             //ul
@@ -118,8 +117,10 @@ class Score extends Component{
                     </a>
                 </li>)
             })
+            list.push(<hr style={{width:'75%'}}/>)
             list.push(<h1>Total: {sum}</h1>)
-            list.push(<h1>Play Again?</h1>)
+            list.push(<hr style={{width:'75%'}}/>)
+            list.push(<a style={{color: 'darkSlateGrey', fontSize: '22px', marginBottom: '20px'}} href="/">Play Again?</a>)
         return (
             <div style={this.otherWrapperStyle}>
                 <div id="screen" style={this.screenStyle}></div>

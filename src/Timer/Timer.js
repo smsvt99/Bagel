@@ -4,7 +4,20 @@ const titleStyle= {
     display: "flex",
     justifyContent: "space-between",
     width: "440px",
-    alignContent: "baseline"
+    alignItems: 'flex-end'
+}
+const deleteStyle = {
+    border: "3px solid darkGrey",
+    width: "40px",
+    height: "40px",
+    backgroundColor: "orangeRed",
+    textAlign: "center",
+    borderRadius: "50%",
+    color: "whitesmoke",
+    fontSize: '30px',
+    lineHeight: '40px',
+    marginRight: '5px',
+    cursor: 'pointer'
 }
 const timerStyle = {
     border: "5px solid darkgrey",
@@ -16,12 +29,12 @@ const timerStyle = {
     color: "whitesmoke"
 }
 const nameStyle = {
-    paddingTop: "15px"
+    // paddingTop: "15px"
 }
 
 class Timer extends Component{
     state = {
-        time: 10
+        time: 20
     }
     componentDidMount = () => {
         setTimeout(()=>{
@@ -43,7 +56,10 @@ class Timer extends Component{
     return(
         <div style={titleStyle}>
             <h1 style={nameStyle}>Polyglot</h1>
-            <h1 style={timerStyle}>{this.state.time}</h1>
+            <div style={{display: 'flex', alignItems: 'flex-end'}}>
+                <div onClick={this.props.clear} style={deleteStyle}>X</div>
+                <h1 style={timerStyle}>{this.state.time}</h1>
+            </div>
         </div>
     )
     }

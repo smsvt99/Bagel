@@ -30,11 +30,6 @@ class Die extends Component {
 
 hasNotAlreadyBeenClicked = (target) => {
     return !target.classList.contains('clicked')
-    // if(!target.classList.contains('clicked')){
-    //     return true
-    // } else {
-    //     return false
-    // }
 }
     
 handleClick = (event) => {
