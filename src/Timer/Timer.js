@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-const titleStyle= {
+const titleStyle = {
     display: "flex",
     justifyContent: "space-between",
     width: "440px",
@@ -32,36 +32,40 @@ const nameStyle = {
     // paddingTop: "15px"
 }
 
-class Timer extends Component{
+class Timer extends Component {
     state = {
-        time: 20
+        time: 150,
+        timerBegun: false
     }
-    componentDidMount = () => {
-        setTimeout(()=>{
-            this.tick()
-        }, 1000)
+    componentDidUpdate = () => {
+        if (this.props.beginTimer && !this.state.timerBegun) {
+            this.setState({timerBegun:true})
+            let myTimeout = setTimeout(() => {
+                this.tick()
+            }, 1000)
+        }
     }
     tick = () => {
-        if (this.state.time > 0){
+        if (this.state.time > 0) {
             this.setState({
                 time: this.state.time - 1
-            }, ()=>{
+            }, () => {
                 setTimeout(this.tick, 1000)
             })
         } else {
             this.props.timerIsDone()
         }
     }
-    render(){
-    return(
-        <div style={titleStyle}>
-            <h1 style={nameStyle}>Polyglot</h1>
-            <div style={{display: 'flex', alignItems: 'flex-end'}}>
-                <div onClick={this.props.clear} style={deleteStyle}>X</div>
-                <h1 style={timerStyle}>{this.state.time}</h1>
+    render() {
+        return (
+            <div style={titleStyle}>
+                <h1 style={nameStyle}>Polyglot</h1>
+                <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <div onClick={this.props.clear} style={deleteStyle}>X</div>
+                    <h1 style={timerStyle}>{this.state.time}</h1>
+                </div>
             </div>
-        </div>
-    )
+        )
     }
 }
 

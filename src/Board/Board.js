@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Die from '../Die/Die.js';
 import Score from '../Score/Score.js';
 
-
+ 
 const rowStyle = {
     display: "flex",
     flexDirection: "row"

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Diacritics from '../Diacritics/Diacritics.js'
 
-const dieStyle = {
+const dieStyle = { 
     // display: "inline",
     border: "5px solid darkgrey",
     width: "90px",

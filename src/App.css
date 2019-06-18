@@ -26,7 +26,30 @@ h1{
   align-self: left;
   margin-top: 20px;
 }
+h2{
+  font-family: 'Sniglet', cursive;
+  color: darkslategrey;
+  font-size: 28px;
+  padding: 0;
+  margin: 0;
+  align-self: left;
+  margin-top: 10px;
+}
 .option:hover{
   background-color: palegreen !important;
   color: black !important;
+}
+
+.startOption:hover{
+  background-color: lightblue !important;
+}
+input{
+  font-family: 'Sniglet', cursive;
+  color: darkslategrey;
+  font-size: 24px;
+  background: whitesmoke;
+  border: 2px solid lightgray;
+  display: block;
+  margin: auto;
+  text-align: center;
 }

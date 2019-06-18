@@ -1,29 +1,46 @@
 import React, { Component } from 'react';
 import Board from './Board/Board.js';
 import Timer from './Timer/Timer.js';
-import Submit from "./Submit/Submit.js";
-
+import Submit from './Submit/Submit.js';
+import Start from './Start/Start.js'
+import Wait from './Wait/Wait.js';
+import socketIO from 'socket.io-client'
+ 
 import './App.css';
-import { NONAME } from 'dns';
 
 class App extends Component {
 
   state = {
-    diceArray: null,
-    lastClick: null,
+    beginTimer: false,
     currentWord: "",
+    diceArray: null,
+    displayStart: true,
+    endpoint: 'http://localhost:8081',
+    gameMaster: false,
+    gameMasterName: null,
+    lastClick: null,
+    room: null,
+    roomMates: [],
+    showStart: true,
+    socket: null,
+    timerIsRunning: true,
+    waiting: false,
     wordList: [],
-    timerIsRunning: true
   }
 
+
   componentDidMount = () => {
-    fetch('/new')
-      .then(data => data.json())
-      .then(data => {
-        this.setState({
-          diceArray: data,
-        })
-      })
+    this.setState({
+      socket : socketIO(this.state.endpoint)
+    })
+
+    // fetch('/new')
+    //   .then(data => data.json())
+    //   .then(data => {
+    //     this.setState({
+    //       diceArray: data,
+    //     })
+    //   })
   }
 
   componentWillUpdate = (nextProps, nextState) => {
@@ -47,9 +64,9 @@ class App extends Component {
               else {
                 switch (value.title.length) {
                   case 3: result.score = 1; break;
-                  case 4: result.score = 1; break;
-                  case 5: result.score = 2; break;
-                  case 6: result.score = 3; break;
+                  case 4: result.score = 2; break;
+                  case 5: result.score = 3; break;
+                  case 6: result.score = 4; break;
                   case 7: result.score = 5; break;
                   default: result.score = 11; break;
                 }
@@ -109,15 +126,55 @@ class App extends Component {
       })
     }
     upperFirst = () => {
+      if(this.state.currentWord){
       this.setState({
         currentWord: this.state.currentWord[0].toUpperCase() + this.state.currentWord.slice(1, this.state.currentWord.length)
+      })
+    }
+    }
+    beginTimer = () => {
+      this.setState({
+        beginTimer:true
+      })
+    }
+    hideStart = () => {
+      document.getElementById("startWrapper").style.opacity = 0;
+      setTimeout(()=>{
+        this.setState({
+          showStart: false
+        })
+      }, 1000) 
+    }
+    setMaster = () => {
+      this.setState({
+        gameMaster: true
+      })
+    }
+    wait = () => {
+      this.setState({
+        waiting: true
       })
     }
 
     render(){
       return (
         <div className="column">
+          <Wait
+            waiting = {this.state.waiting}
+            gameMaster = {this.state.gameMaster}
+            gameMasterName = {this.state.gameMasterName}
+            room = {this.state.room}
+          />
+          <Start
+            beginTimer={this.beginTimer}
+            showStart = {this.state.showStart}
+            hideStart = {this.hideStart}
+            socket = {this.state.socket}
+            setMaster = {this.setMaster}
+            wait = {this.wait}
+          />
           <Timer
+            beginTimer={this.state.beginTimer}
             timerIsDone={this.timerIsDone}
             clear={this.clear}
           />

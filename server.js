@@ -1,6 +1,16 @@
-const path = require('path');
+const path = require('path'); 
 var express = require('express');
+
 var app = express();
+const http = require('http');
+const server = http.createServer(app);
+const socketIO = require('socket.io');
+const io = socketIO(server);
+
+const cors = require('cors');
+app.use(cors());
+
+
 
 let dice = [
     ['r', 'i', 'f', 'o', 'b', 'x'],
@@ -21,36 +31,30 @@ let dice = [
     ['p', 'a', 'c', 'e', 'm', 'd'],
  ];
 
-// app.get('/', (req, res) => {
-//     if (game.board){
-//         res.send(game.board);
-//     } else {
-//         game.shuffle();
-//         game.roll();
-//         res.send(game.board);
-//     }
+// var server = app.listen(8081, function () {
+//    var host = server.address().address
+   var port = 8081;
+   
+//    console.log("Example app listening at http://%s:%s", host, port)
 // })
 
-// app.use(express.static(path.join(__dirname, 'src')));
-// app.use(express.static(path.join('public')))
+server.listen(port, () => console.log(`Listening on port ${port}`))
 
-// app.get('/', (req, res)=>{
-//     res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// });
+// app.get('/new', (req, res) => {
+//     console.log('GET /new')
+//     game.shuffle();
+//     game.roll();
+//     res.send(JSON.stringify(game.board));
+// })
 
-app.get('/new', (req, res) => {
-    console.log('GET /new')
-    game.shuffle();
-    game.roll();
-    res.send(JSON.stringify(game.board));
+io.on('connection', socket => {
+    console.log('new connection')
+
+    socket.on('newRoom', info =>{
+        console.log(info)
+    })
 })
 
-var server = app.listen(8081, function () {
-   var host = server.address().address
-   var port = server.address().port
-   
-   console.log("Example app listening at http://%s:%s", host, port)
-})
 
 class Game{
     constructor(dice){
