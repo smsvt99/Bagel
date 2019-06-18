@@ -57,7 +57,6 @@ class Start extends Component{
     {
         if(this.state.makeARoom)
         {
-            console.log(this.props.socket)
             return <MakeARoom
                         styles={this.styles}
                         socket={this.props.socket}

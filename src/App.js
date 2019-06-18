@@ -32,6 +32,10 @@ class App extends Component {
   componentDidMount = () => {
     this.setState({
       socket : socketIO(this.state.endpoint)
+    }, ()=>{
+      this.state.socket.on('new login', name => {
+      console.log(name + "has joined the room");
+    })
     })
 
     // fetch('/new')

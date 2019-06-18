@@ -46,12 +46,39 @@ server.listen(port, () => console.log(`Listening on port ${port}`))
 //     game.roll();
 //     res.send(JSON.stringify(game.board));
 // })
+let rooms = {};
 
 io.on('connection', socket => {
     console.log('new connection')
 
     socket.on('newRoom', info =>{
         console.log(info)
+        if(rooms[info.name])
+        {
+            //emit error
+        }
+        else
+        {
+            let room = new Room(info.name, info.master);
+            rooms[info.name] = room;
+            socket.join(info.name);
+            console.log(rooms);
+            io.in(info.name).emit('new login', info.master);
+   
+        }
+        
+    })
+    socket.on('joinRoom', info => {
+        if(!Object.keys(rooms).contains(info.room))
+        {
+            //emit error
+        }
+        else
+        {
+            socket.join(info.room);
+            rooms[info.room].addMember(info.name);
+            io.in(info.room).emit('new login', info.name);
+        }
     })
 })
 
@@ -84,6 +111,17 @@ class Game{
          })
          this.board = board;
     }
+}
+
+class Room{
+    constructor(name,masterName){
+        this.name = name;
+        this.masterName = masterName
+        this.roomMates = [masterName]
+    }
+    addMember(number){
+        this.roomMates.push(member);
+    };
 }
 
 let game = new Game(dice);

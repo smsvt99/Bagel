@@ -30,7 +30,7 @@ class Wait extends Component
         {
             if(this.props.gameMaster)
             {
-
+                return("Hello game master")
             }
             else
             {

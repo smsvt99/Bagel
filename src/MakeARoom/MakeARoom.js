@@ -3,8 +3,8 @@ import React, {Component} from 'react';
 class MakeARoom extends Component
 {
     state = {
-        master: null,
-        name: null
+        master: "",
+        name: ""
     }
     handleMaster = (e) => {
         this.setState({
@@ -20,7 +20,6 @@ class MakeARoom extends Component
         this.props.hideStart();
         this.props.setMaster();
         this.props.wait()
-        console.log(this.props.socket)
         this.props.socket.emit('newRoom', {
             master: this.state.master,
             name: this.state.name,
@@ -49,7 +48,7 @@ class MakeARoom extends Component
                         ></input>
                    <div 
                         style = {this.props.styles.optionStyle}
-                        class = "startOption"
+                        className = "startOption"
                         onClick = {this.createRoom}
                         >
                        Create
