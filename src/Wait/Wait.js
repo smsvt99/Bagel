@@ -24,7 +24,7 @@ class Wait extends Component {
     }
     boxStyle = {
         backgroundColor: 'palegoldenrod',
-        minWidth: '440px',
+        width: '440px',
         left: '50%',
         top: '50%',
         transform: 'translateX(-50%) translateY(-50%) ',
@@ -109,9 +109,32 @@ class Wait extends Component {
                 return (<div>
                     <div style={this.screenStyle}></div>
                     <div style={this.boxStyle}>
-                        <h1>Polyglot</h1>
-                        <h2>{this.props.roomName}</h2>
-                        <h2>{this.props.gameMasterName}, will </h2>
+                        <h1
+                            style={{ textAlign: 'center' }}
+                        >
+                            Polyglot
+                        </h1>
+                        <div
+                            style={this.loaderStyle}
+                            id="loader"
+                        >
+                            {this.state.dots}
+                        </div>
+                        <div style={this.whiteBoxStyle}>
+                        <h2
+                            style={{ textAlign: 'center' }}
+                        >
+                            Room: {this.props.room}
+                        </h2>
+                        
+                            <h2>
+                                Members:
+                            </h2>
+                            <ul>
+                                {this.props.roomMates.map(mate => <li>{mate}</li>)}
+                            </ul>
+                        </div>
+                        <h2>Your Game Master ({this.props.gameMasterName}) will begin your game soon</h2>
                     </div>
                 </div>)
             }

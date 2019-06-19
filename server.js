@@ -55,7 +55,7 @@ io.on('connection', socket => {
         console.log(info)
         if(rooms[info.name])
         {
-            socket.emit('message', `Room name ${info.name} is unavailable, please try again.`)
+            socket.emit('message', `Room name ${info.name} is unavailable, please try a different name.`)
         }
         else
         {
@@ -65,19 +65,22 @@ io.on('connection', socket => {
             socket.join(info.name);
             io.in(info.name).emit('message', `${info.master} has joined room as Game Master`)
             io.in(info.name).emit('roomStatusUpdate', rooms[info.name])
+            socket.emit('joinSuccessful', info.master)
         }
         
     })
-    socket.on('joinRoom', info => {
-        if(!Object.keys(rooms).contains(info.room))
+    socket.on('attemptJoin', info => {
+        if(!Object.keys(rooms).includes(info.name))
         {
-            //emit error
+            socket.emit('message', "No room exists with that name")
         }
         else
         {
-            socket.join(info.room);
-            rooms[info.room].addMember(info.name);
-            io.in(info.room).emit('new login', info.name);
+            socket.join(info.name);
+            rooms[info.name].addMember(info.member);
+            io.in(info.name).emit('roomStatusUpdate', rooms[info.name])
+            io.in(info.name).emit('message', `${info.member} has joined room`)
+            socket.emit('joinSuccessful', info.member)
         }
     })
     socket.on('masterStartGame', room => {
@@ -85,9 +88,20 @@ io.on('connection', socket => {
         rooms[room].game.roll();
         io.in(room).emit('serverStartGame', rooms[room].game.board)
         setTimeout(()=>{
+            rooms[room].roomMates = [];
             io.in(room).emit('serverStopTimer')
         // }, 180000)
     }, 10000)
+    })
+    socket.on('myResultsToServer', info => {
+        console.log(info)
+        //room, name, uniquewords, score
+        info.uniqueWords.forEach(word => {
+            rooms[info.room].uniques.add(word)
+        })
+        rooms[info.room].addMember(info.name)
+        rooms[info.room].scores[info.name] += info.score
+        console.log(rooms[info.room])
     })
 })
 
@@ -128,6 +142,8 @@ class Room{
         this.masterName = masterName;
         this.roomMates = [masterName];
         this.game = new Game(dice);
+        this.uniques = new Set();
+        this.scores = {};
     }
     addMember(member){
         this.roomMates.push(member);

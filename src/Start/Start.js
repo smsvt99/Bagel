@@ -63,6 +63,7 @@ class Start extends Component{
                         hideStart={this.props.hideStart}
                         setMaster = {this.props.setMaster}
                         wait = {this.props.wait}
+                        multiplayer = {this.props.multiplayer}
                     />
         }
         else if(this.state.joinARoom)
@@ -73,6 +74,7 @@ class Start extends Component{
                         hideStart={this.props.hideStart}
                         setMaster = {this.props.setMaster}
                         wait = {this.props.wait}
+                        multiplayer = {this.props.multiplayer}
                     />
         }
         else 

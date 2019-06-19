@@ -14,7 +14,7 @@ class Score extends Component{
         border: '2px solid darkGrey',
         overflow: 'auto'
     }
-
+ 
     scoreWrapperStyle = {
         opacity: '0',
         textAlign: 'center',
@@ -87,6 +87,10 @@ class Score extends Component{
         // }
     // }
     render(){
+        let caboose;
+        if (this.props.singlePlayer){
+            caboose = <a style={{color: 'darkSlateGrey', fontSize: '22px', marginBottom: '20px'}} href="/">Play Again?</a>;
+        }
         if (this.props.scoreInfo){
             let list = [];
             let sum = 0;
@@ -120,7 +124,7 @@ class Score extends Component{
             list.push(<hr style={{width:'75%'}}/>)
             list.push(<h1>Total: {sum}</h1>)
             list.push(<hr style={{width:'75%'}}/>)
-            list.push(<a style={{color: 'darkSlateGrey', fontSize: '22px', marginBottom: '20px'}} href="/">Play Again?</a>)
+            list.push(caboose)
         return (
             <div style={this.otherWrapperStyle}>
                 <div id="screen" style={this.screenStyle}></div>

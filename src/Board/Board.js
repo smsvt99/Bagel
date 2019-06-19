@@ -85,6 +85,7 @@ class Board extends Component {
         return (<div>
             <Score
                 scoreInfo={this.props.scoreInfo}
+                singlePlayer={this.props.singlePlayer}
             />
             <div style={boardStyle}>{board}</div>
             </div>

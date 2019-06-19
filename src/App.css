@@ -34,6 +34,7 @@ h2{
   margin: 0;
   align-self: left;
   margin-top: 10px;
+  word-wrap: normal;
 }
 .option:hover{
   background-color: palegreen !important;

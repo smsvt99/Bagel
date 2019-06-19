@@ -17,9 +17,10 @@ class MakeARoom extends Component
         }) 
     }
     createRoom = () => {
-        this.props.hideStart();
+        // this.props.hideStart();
         this.props.setMaster();
-        this.props.wait()
+        this.props.multiplayer();
+        // this.props.wait()
         this.props.socket.emit('newRoom', {
             master: this.state.master,
             name: this.state.name,

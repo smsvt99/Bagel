@@ -17,13 +17,16 @@ class App extends Component {
     diceArray: null,
     displayStart: true,
     endpoint: 'http://localhost:8081',
+    everyonesWords: null,
     gameMaster: false,
     gameMasterName: null,
     lastClick: null,
     message: " ",
+    name: null,
     room: null,
     roomMates: [],
     showStart: true,
+    singlePlayer: true,
     socket: null,
     timerIsRunning: true,
     waiting: false,
@@ -57,6 +60,15 @@ class App extends Component {
       })
       this.state.socket.on('serverStopTimer', ()=> {
         this.timerIsDone();
+      })
+      this.state.socket.on('joinSuccessful', (name) => {
+        // this.hideStart();
+        // this.wait();
+        this.setState({
+          waiting: true,
+          showStart: false,
+          name: name
+        })
       })
     })
 
@@ -101,14 +113,31 @@ class App extends Component {
             })
             this.setState({
               scoreInfo: results
-            })
+            }, this.myResultsToServer)
           })
         } else {
+          //If no words were entered, send empty strings.
           this.setState({
             scoreInfo: [{lemma: '', score: ''}]
-          })
+          }, this.myResultsToServer)
         }
       }
+    }
+
+    myResultsToServer = () => {
+      let uniqueWords = [];
+      let score = 0;
+      this.state.scoreInfo.forEach(item=>{
+          score += item.score
+          if (item.score > 0)
+            uniqueWords.push(item.lemma);
+        })
+      this.state.socket.emit('myResultsToServer', {
+        room: this.state.room,
+        name: this.state.name,
+        uniqueWords: uniqueWords,
+        score: score
+      })
     }
 
     timerIsDone = () => {
@@ -186,6 +215,11 @@ class App extends Component {
         message:" "
       })
     }
+    multiplayer = () => {
+      this.setState({
+        singlePlayer : false
+      })
+    }
 
     render(){
       return (
@@ -209,6 +243,7 @@ class App extends Component {
             socket = {this.state.socket}
             setMaster = {this.setMaster}
             wait = {this.wait}
+            multiplayer = {this.multiplayer}
           />
           <Timer
             beginTimer={this.state.beginTimer}
@@ -222,6 +257,7 @@ class App extends Component {
             lastClick={this.state.lastClick}
             timerIsRunning={this.state.timerIsRunning}
             scoreInfo={this.state.scoreInfo}
+            singlePlayer={this.state.singlePlayer}
           />
           <Submit
             currentWord={this.state.currentWord}
