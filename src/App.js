@@ -4,7 +4,8 @@ import Timer from './Timer/Timer.js';
 import Submit from './Submit/Submit.js';
 import Start from './Start/Start.js'
 import Wait from './Wait/Wait.js';
-import socketIO from 'socket.io-client'
+import Message from './Message/Message';
+import socketIO from 'socket.io-client';
  
 import './App.css';
 
@@ -19,6 +20,7 @@ class App extends Component {
     gameMaster: false,
     gameMasterName: null,
     lastClick: null,
+    message: " ",
     room: null,
     roomMates: [],
     showStart: true,
@@ -33,9 +35,29 @@ class App extends Component {
     this.setState({
       socket : socketIO(this.state.endpoint)
     }, ()=>{
-      this.state.socket.on('new login', name => {
-      console.log(name + "has joined the room");
-    })
+      this.state.socket.on('message', message => {
+        this.setState({
+          message: message
+        })
+      })
+      this.state.socket.on('roomStatusUpdate', room => {
+        this.setState({
+          roomMates : room.roomMates,
+          room : room.name,
+          gameMasterName : room.masterName
+        })
+      })
+      this.state.socket.on('serverStartGame', (array) => {
+        this.setState({
+          beginTimer: true,
+          waiting: false,
+          showStart: false,
+          diceArray: array
+        })
+      })
+      this.state.socket.on('serverStopTimer', ()=> {
+        this.timerIsDone();
+      })
     })
 
     // fetch('/new')
@@ -159,15 +181,26 @@ class App extends Component {
         waiting: true
       })
     }
+    clearMessage = () => {
+      this.setState({
+        message:" "
+      })
+    }
 
     render(){
       return (
         <div className="column">
+          <Message
+            message={this.state.message}
+            clearMessage={this.clearMessage}
+          />
           <Wait
             waiting = {this.state.waiting}
             gameMaster = {this.state.gameMaster}
             gameMasterName = {this.state.gameMasterName}
             room = {this.state.room}
+            roomMates = {this.state.roomMates}
+            socket = {this.state.socket}
           />
           <Start
             beginTimer={this.beginTimer}
@@ -201,5 +234,5 @@ class App extends Component {
       )
     }
   }
-
+ 
   export default App;

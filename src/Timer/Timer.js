@@ -34,7 +34,7 @@ const nameStyle = {
 
 class Timer extends Component {
     state = {
-        time: 150,
+        time: 180,
         timerBegun: false
     }
     componentDidUpdate = () => {

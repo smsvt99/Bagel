@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import JoinARoom from '../JoinARoom/JoinARoom'
 import MakeARoom from '../MakeARoom/MakeARoom'
 
-class Start extends Component{
+class Start extends Component{ 
     styles = {
     optionStyle : {
         margin: "10px",

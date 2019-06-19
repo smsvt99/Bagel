@@ -55,16 +55,16 @@ io.on('connection', socket => {
         console.log(info)
         if(rooms[info.name])
         {
-            //emit error
+            socket.emit('message', `Room name ${info.name} is unavailable, please try again.`)
         }
         else
         {
             let room = new Room(info.name, info.master);
             rooms[info.name] = room;
+            //rooms[info.name].addMember(info.master);
             socket.join(info.name);
-            console.log(rooms);
-            io.in(info.name).emit('new login', info.master);
-   
+            io.in(info.name).emit('message', `${info.master} has joined room as Game Master`)
+            io.in(info.name).emit('roomStatusUpdate', rooms[info.name])
         }
         
     })
@@ -79,6 +79,15 @@ io.on('connection', socket => {
             rooms[info.room].addMember(info.name);
             io.in(info.room).emit('new login', info.name);
         }
+    })
+    socket.on('masterStartGame', room => {
+        rooms[room].game.shuffle()
+        rooms[room].game.roll();
+        io.in(room).emit('serverStartGame', rooms[room].game.board)
+        setTimeout(()=>{
+            io.in(room).emit('serverStopTimer')
+        // }, 180000)
+    }, 10000)
     })
 })
 
@@ -100,13 +109,13 @@ class Game{
         this.dice.forEach((die, index)=> {
             let randomIndex = Math.ceil(Math.random() * 6) - 1;
             if (index < 4){
-                 board[0].push(die[randomIndex])
+                 board[0].push(die[randomIndex]);
             } else if (index < 8){
-                 board[1].push(die[randomIndex])
+                 board[1].push(die[randomIndex]);
             } else if (index < 12){
-                 board[2].push(die[randomIndex])
+                 board[2].push(die[randomIndex]);
             } else if (index < 16){
-                 board[3].push(die[randomIndex])
+                 board[3].push(die[randomIndex]);
             }
          })
          this.board = board;
@@ -116,12 +125,13 @@ class Game{
 class Room{
     constructor(name,masterName){
         this.name = name;
-        this.masterName = masterName
-        this.roomMates = [masterName]
+        this.masterName = masterName;
+        this.roomMates = [masterName];
+        this.game = new Game(dice);
     }
-    addMember(number){
+    addMember(member){
         this.roomMates.push(member);
     };
 }
 
-let game = new Game(dice);
+// let game = new Game(dice);

@@ -53,3 +53,8 @@ input{
   margin: auto;
   text-align: center;
 }
+li{
+  color: darkslategray;
+  font-family: 'Sniglet', cursive;
+
+}

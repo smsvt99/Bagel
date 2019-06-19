@@ -14,7 +14,7 @@ class MakeARoom extends Component
     handleName = (e) => {
         this.setState({
             name:e.target.value
-        })
+        }) 
     }
     createRoom = () => {
         this.props.hideStart();
