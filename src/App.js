@@ -16,7 +16,7 @@ class App extends Component {
     currentWord: "",
     diceArray: [['a','r','m','a'],['v','i','r','v'],['m','q','v','e'],['c','a','n','o']],
     displayStart: true,
-    endpoint: 'http://localhost:8081',
+    endpoint: 'https://shielded-inlet-39461.herokuapp.com',
     everyonesWords: null,
     gameMaster: false,
     gameMasterName: null,
