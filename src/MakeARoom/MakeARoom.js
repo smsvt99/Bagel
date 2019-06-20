@@ -9,7 +9,7 @@ class MakeARoom extends Component
     handleMaster = (e) => {
         this.setState({
             master:e.target.value
-        })
+        }) 
     } 
     handleName = (e) => {
         this.setState({

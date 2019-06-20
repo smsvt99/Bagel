@@ -61,9 +61,10 @@ io.on('connection', socket => {
         {
             let room = new Room(info.name, info.master);
             rooms[info.name] = room;
-            //rooms[info.name].addMember(info.master);
+            rooms[info.name].addMember(info.master);
             socket.join(info.name);
             io.in(info.name).emit('message', `${info.master} has joined room as Game Master`)
+            rooms[info.name].prepareArray();
             io.in(info.name).emit('roomStatusUpdate', rooms[info.name])
             socket.emit('joinSuccessful', info.master)
         }
@@ -78,6 +79,7 @@ io.on('connection', socket => {
         {
             socket.join(info.name);
             rooms[info.name].addMember(info.member);
+            rooms[info.name].prepareArray();
             io.in(info.name).emit('roomStatusUpdate', rooms[info.name])
             io.in(info.name).emit('message', `${info.member} has joined room`)
             socket.emit('joinSuccessful', info.member)
@@ -88,7 +90,9 @@ io.on('connection', socket => {
         rooms[room].game.roll();
         io.in(room).emit('serverStartGame', rooms[room].game.board)
         setTimeout(()=>{
-            rooms[room].roomMates = [];
+            //NOT ANYMORE: removed here and added back with 'myResultsToServer' to maintain a census
+            // rooms[room].roomMates = [];
+            rooms[room].uniques = new Set();
             io.in(room).emit('serverStopTimer')
         // }, 180000)
     }, 10000)
@@ -99,9 +103,18 @@ io.on('connection', socket => {
         info.uniqueWords.forEach(word => {
             rooms[info.room].uniques.add(word)
         })
-        rooms[info.room].addMember(info.name)
+        // rooms[info.room].addMember(info.name)
         rooms[info.room].scores[info.name] += info.score
+        rooms[info.room].prepareArray();
         console.log(rooms[info.room])
+
+        io.in(info.room).emit('roomStatusUpdate', rooms[info.room])
+    })
+    socket.on('requestBoardForSingle', () => {
+        console.log('single player requested')
+        singlePlayer.roll();
+        singlePlayer.shuffle();
+        socket.emit('boardForSingle', singlePlayer.board)
     })
 })
 
@@ -140,14 +153,19 @@ class Room{
     constructor(name,masterName){
         this.name = name;
         this.masterName = masterName;
-        this.roomMates = [masterName];
+        // this.roomMates = [masterName];
         this.game = new Game(dice);
         this.uniques = new Set();
         this.scores = {};
+        this.uniquesArray = [];
     }
     addMember(member){
-        this.roomMates.push(member);
+        // this.roomMates.push(member);
+        this.scores[member] = 0;
     };
+    prepareArray(){
+        this.uniquesArray = Array.from(this.uniques)
+    }
 }
 
-// let game = new Game(dice);
+let singlePlayer = new Game(dice);

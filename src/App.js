@@ -6,7 +6,7 @@ import Start from './Start/Start.js'
 import Wait from './Wait/Wait.js';
 import Message from './Message/Message';
 import socketIO from 'socket.io-client';
- 
+  
 import './App.css';
 
 class App extends Component {
@@ -14,7 +14,7 @@ class App extends Component {
   state = {
     beginTimer: false,
     currentWord: "",
-    diceArray: null,
+    diceArray: [['a','r','m','a'],['v','i','r','v'],['m','q','v','e'],['c','a','n','o']],
     displayStart: true,
     endpoint: 'http://localhost:8081',
     everyonesWords: null,
@@ -24,11 +24,13 @@ class App extends Component {
     message: " ",
     name: null,
     room: null,
-    roomMates: [],
+    // roomMates: [],
+    scores: null,
     showStart: true,
     singlePlayer: true,
     socket: null,
     timerIsRunning: true,
+    uniques: [], //set?
     waiting: false,
     wordList: [],
   }
@@ -44,22 +46,36 @@ class App extends Component {
         })
       })
       this.state.socket.on('roomStatusUpdate', room => {
+        console.log('MY UNIQUES', room.uniques)
+        console.log('MY UNIQUES ARRAY', room.uniquesArray)
         this.setState({
-          roomMates : room.roomMates,
+          // roomMates : room.roomMates,
+          scores: room.scores,
           room : room.name,
-          gameMasterName : room.masterName
+          gameMasterName : room.masterName,
+          uniques: room.uniquesArray,
+          scores:room.scores
         })
       })
       this.state.socket.on('serverStartGame', (array) => {
+        this.backToWait();
         this.setState({
           beginTimer: true,
           waiting: false,
           showStart: false,
-          diceArray: array
+          diceArray: array,
+          wordList : []
         })
       })
       this.state.socket.on('serverStopTimer', ()=> {
         this.timerIsDone();
+        this.setState({
+          currentWord: ""
+        })
+        Array.from(document.getElementsByClassName("die")).forEach( letter => {
+              letter.classList.remove('lastClicked');
+              letter.classList.remove('clicked');
+            })
       })
       this.state.socket.on('joinSuccessful', (name) => {
         // this.hideStart();
@@ -70,15 +86,21 @@ class App extends Component {
           name: name
         })
       })
+      this.state.socket.on('boardForSingle', board => {
+        this.setState({
+          diceArray: board,
+          scoreInfo:null
+        })
+      })
     })
-
-    // fetch('/new')
-    //   .then(data => data.json())
-    //   .then(data => {
-    //     this.setState({
-    //       diceArray: data,
-    //     })
-    //   })
+  }
+  backToWait = () => {
+    this.setState({
+      timerIsRunning: true,
+      waiting: true,
+      scoreInfo: null,
+      wordList : []
+    })
   }
 
   componentWillUpdate = (nextProps, nextState) => {
@@ -112,14 +134,24 @@ class App extends Component {
               results.push(result)
             })
             this.setState({
-              scoreInfo: results
-            }, this.myResultsToServer)
+              scoreInfo: results,
+              currentWord: '',
+              lastClick: null
+            }, () => {
+              if(!this.state.singlePlayer)
+                this.myResultsToServer();
+            })
           })
         } else {
-          //If no words were entered, send empty strings.
+          //If no words were entered, send empty some dummy data.
           this.setState({
-            scoreInfo: [{lemma: '', score: ''}]
-          }, this.myResultsToServer)
+            scoreInfo: [{lemma: '', score: 0}],
+            currentWord: '',
+            lastClick: null
+          }, () => {
+            if(!this.state.singlePlayer)
+              this.myResultsToServer();
+          })
         }
       }
     }
@@ -128,6 +160,7 @@ class App extends Component {
       let uniqueWords = [];
       let score = 0;
       this.state.scoreInfo.forEach(item=>{
+          console.log(item)
           score += item.score
           if (item.score > 0)
             uniqueWords.push(item.lemma);
@@ -135,14 +168,19 @@ class App extends Component {
       this.state.socket.emit('myResultsToServer', {
         room: this.state.room,
         name: this.state.name,
-        uniqueWords: uniqueWords,
-        score: score
+        "uniqueWords": uniqueWords,
+        "score": score
       })
     }
 
     timerIsDone = () => {
       this.setState({
-        timerIsRunning: false
+        timerIsRunning: false,
+        beginTimer: false
+      },()=>{
+        this.setState({
+          timerIsRunning: true
+        })
       })
     }
 
@@ -233,8 +271,10 @@ class App extends Component {
             gameMaster = {this.state.gameMaster}
             gameMasterName = {this.state.gameMasterName}
             room = {this.state.room}
-            roomMates = {this.state.roomMates}
+            // roomMates = {this.state.roomMates}
             socket = {this.state.socket}
+            scores = {this.state.scores}
+            uniques = {this.state.uniques}
           />
           <Start
             beginTimer={this.beginTimer}
@@ -249,6 +289,7 @@ class App extends Component {
             beginTimer={this.state.beginTimer}
             timerIsDone={this.timerIsDone}
             clear={this.clear}
+            singlePlayer={this.state.singlePlayer}
           />
           <Board
             diceArray={this.state.diceArray}
@@ -258,6 +299,9 @@ class App extends Component {
             timerIsRunning={this.state.timerIsRunning}
             scoreInfo={this.state.scoreInfo}
             singlePlayer={this.state.singlePlayer}
+            backToWait={this.backToWait}
+            socket={this.state.socket}
+            beginTimer={this.beginTimer}
           />
           <Submit
             currentWord={this.state.currentWord}

@@ -46,7 +46,7 @@ colorClicks = (target) => {
             letter.classList.remove('lastClicked');
             letter.classList.add('clicked')
         }
-    })
+    }) 
     target.classList.add('lastClicked')
 }
 handleDown = (event) => {

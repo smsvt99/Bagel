@@ -84,8 +84,11 @@ class Board extends Component {
         }
         return (<div>
             <Score
+                backToWait = {this.props.backToWait}
                 scoreInfo={this.props.scoreInfo}
                 singlePlayer={this.props.singlePlayer}
+                socket={this.props.socket}
+                beginTimer={this.props.beginTimer}
             />
             <div style={boardStyle}>{board}</div>
             </div>

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import JoinARoom from '../JoinARoom/JoinARoom'
 import MakeARoom from '../MakeARoom/MakeARoom'
 
-class Start extends Component{ 
+class Start extends Component{  
     styles = {
     optionStyle : {
         margin: "10px",
@@ -49,7 +49,6 @@ class Start extends Component{
         makeARoom: false,
         joinARoom: false,
     }
-
 
     render()
     {
@@ -112,6 +111,7 @@ class Start extends Component{
                             onClick={()=>{
                                 this.props.beginTimer();
                                 this.props.hideStart();
+                                this.props.socket.emit('requestBoardForSingle')
                             }}
                             >
                             Play Alone

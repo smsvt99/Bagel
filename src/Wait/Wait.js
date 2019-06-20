@@ -32,7 +32,8 @@ class Wait extends Component {
         position: 'fixed',
         padding: '4px',
         borderRadius: "18px",
-        border: "5px solid darkgrey"
+        border: "5px solid darkgrey",
+        transition: 'top .5s, opacity .5s',
     }
     loaderStyle = {
         textAlign: 'center',
@@ -45,6 +46,10 @@ class Wait extends Component {
         border: '2px solid darkgrey',
         borderRadius: '14px',
         backgroundColor: 'whitesmoke'
+    }
+    rowStyle = {
+        display: 'flex',
+        justifyContent: 'space-around'
     }
     state = {
         dots: " . ",
@@ -65,81 +70,95 @@ class Wait extends Component {
         this.props.socket.emit('masterStartGame', this.props.room)
     }
     render() {
-        if (this.props.waiting) {
-            if (this.props.gameMaster) {
-                return (<div>
-                    <div style={this.screenStyle}></div>
-                    <div style={this.boxStyle}>
-                        <h1
-                            style={{ textAlign: 'center' }}
-                        >
-                            Polyglot
-                        </h1>
-                        <div
-                            style={this.loaderStyle}
-                            id="loader"
-                        >
-                            {this.state.dots}
-                        </div>
-                        <div style={this.whiteBoxStyle}>
-                        <h2
-                            style={{ textAlign: 'center' }}
-                        >
-                            Room: {this.props.room}
-                        </h2>
-                        
-                            <h2>
-                                Members:
-                            </h2>
-                            <ul>
-                                {this.props.roomMates.map(mate => <li>{mate}</li>)}
-                            </ul>
-                        </div>
-                        <div
-                            style={this.buttonStyle}
-                            className="startOption"
-                            onClick={this.masterStartGame}
-                            >
-                                Start Game
-                            </div>
-                    </div>
-                </div>)
-            }
-            else {
-                return (<div>
-                    <div style={this.screenStyle}></div>
-                    <div style={this.boxStyle}>
-                        <h1
-                            style={{ textAlign: 'center' }}
-                        >
-                            Polyglot
-                        </h1>
-                        <div
-                            style={this.loaderStyle}
-                            id="loader"
-                        >
-                            {this.state.dots}
-                        </div>
-                        <div style={this.whiteBoxStyle}>
-                        <h2
-                            style={{ textAlign: 'center' }}
-                        >
-                            Room: {this.props.room}
-                        </h2>
-                        
-                            <h2>
-                                Members:
-                            </h2>
-                            <ul>
-                                {this.props.roomMates.map(mate => <li>{mate}</li>)}
-                            </ul>
-                        </div>
-                        <h2>Your Game Master ({this.props.gameMasterName}) will begin your game soon</h2>
-                    </div>
-                </div>)
-            }
+
+        let caboose;
+        if (this.props.gameMaster) {
+            caboose = <div
+                style={this.buttonStyle}
+                className="startOption"
+                onClick={this.masterStartGame}
+            >
+                Start Game
+            </div>
+        } else {
+            caboose = <h2 style = {{textAlign: 'center'}} >Your Game Master ({this.props.gameMasterName}) will begin your game soon</h2>
         }
-        else {
+
+        // let boxContent;
+        // if (!this.props.scores) {
+        //     boxContent = <div>
+        //         <h2 style={{ textAlign: 'center' }}>
+        //             Room: {this.props.room}
+        //         </h2>
+        //         <h2>
+        //             Members:
+        //     </h2>
+        //         <ul>
+        //             {this.props.roomMates.map(mate => <li>{mate}</li>)}
+        //         </ul>
+        //     </div>
+        // } else {
+        //     boxContent = <div>
+        //         <h2 style={{ textAlign: 'center' }}>
+        //             Room: {this.props.room}
+        //         </h2>
+        //         <h2>
+        //             Scores:
+        //     </h2>
+        //         <ul>
+        //             {Object.entries(this.props.scores).map(([name, score]) => <li>{name} : {score}</li>)}
+        //         </ul>
+        //     </div>
+        // }
+
+        if (this.props.waiting) {
+            return (<div>
+                <div style={this.screenStyle}></div>
+                <div style={this.boxStyle}>
+                    <h1
+                        style={{ textAlign: 'center' }}
+                    >
+                        Polyglot
+                        </h1>
+                    <div
+                        style={this.loaderStyle}
+                        id="loader"
+                    >
+                        {this.state.dots}
+                    </div>
+                    <div style={this.whiteBoxStyle}>
+                        <h2 style={{ textAlign: 'center' }}>
+                            Room: {this.props.room}
+                        </h2>
+                        <div style={this.rowStyle}>
+                            <div>
+                                <h2>
+                                    Scores:
+                                </h2>
+                                <ul>
+                                    {Object.entries(this.props.scores)
+                                        .sort((a,b) => b[1] - a[1])
+                                        .map(([name, score]) => <li>{name} : {score}</li>)}
+                                </ul>
+                            </div>
+                            <div>
+                                <h2>
+                                    Words:
+                                </h2>
+                                <ul>
+                                    {Array.from(this.props.uniques)
+                                        .sort((a,b) => b.length - a.length)
+                                        .map((word) => <li>{word}</li>)}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {caboose}
+                </div>
+            </div>)
+
+
+        } else {
             return null;
         }
     }

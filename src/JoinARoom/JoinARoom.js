@@ -8,7 +8,7 @@ class JoinARoom extends Component
     }
     handleMember = (e) => {
         this.setState({
-            member:e.target.value
+            member:e.target.value 
         })
     } 
     handleName = (e) => {
