@@ -33,7 +33,8 @@ let dice = [
 
 // var server = app.listen(8081, function () {
 //    var host = server.address().address
-   var port = 8081;
+//    var port = 8081;
+const port = process.env.PORT || 8081;
    
 //    console.log("Example app listening at http://%s:%s", host, port)
 // })
@@ -169,3 +170,20 @@ class Room{
 }
 
 let singlePlayer = new Game(dice);
+
+class Master{
+    constructor(name, id, room){
+        this.name = name;
+        this.id = id;
+        this.room = room;
+    }
+}
+
+app.use(cors());
+
+app.use(express.static(path.join(__dirname, 'build')));
+// app.use(express.static(path.join('public')))
+
+app.get('/', (req, res)=>{
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});

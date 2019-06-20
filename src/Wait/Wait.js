@@ -148,7 +148,7 @@ class Wait extends Component {
                                 <ul>
                                     {Array.from(this.props.uniques)
                                         .sort((a,b) => b.length - a.length)
-                                        .map((word) => <li>{word}</li>)}
+                                        .map((word) => <li><a style = {{color: 'darkslategrey'}} href={`https://en.wiktionary.org/wiki/${word}`} target="_blank">{word}</a></li>)}
                                 </ul>
                             </div>
                         </div>
