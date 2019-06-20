@@ -34,7 +34,7 @@ const nameStyle = {
 
 class Timer extends Component {
     state = {
-        time: 10,
+        time: 180,
         timerBegun: false
     }
     componentDidUpdate = () => {
@@ -65,7 +65,7 @@ class Timer extends Component {
                     timeout = setTimeout(this.tick, 1000)
                 else {
                     this.setState({
-                        time: 10,
+                        time: 180,
                         timerBegun: false
                     })
                     if (this.props.singlePlayer)

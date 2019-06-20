@@ -95,8 +95,8 @@ io.on('connection', socket => {
             // rooms[room].roomMates = [];
             rooms[room].uniques = new Set();
             io.in(room).emit('serverStopTimer')
-        // }, 180000)
-    }, 10000)
+        }, 180000)
+    // }, 10000)
     })
     socket.on('myResultsToServer', info => {
         console.log(info)
